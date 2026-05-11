@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Contact - EventSphere</title>
-     <link rel="stylesheet" href="{{ asset('css/globals.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
+    <title>Contact - EventOra</title>
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="Index.css" />
+    <link rel="stylesheet" href="contact.css">
 </head>
 <body>
 
     <header class="navbar">
         <div class="logo">
-            <div class="logo-box"></div>
-            <span>EventSphere</span>
+            <div class="logo-box">
+                <img src="../logo/logo.png" alt="EventOra Logo" />
+            </div>
+           <!-- <span>EventOra</span> -->
         </div>
         <nav class="nav-links">
-            <a href="{{ route('home') }}">Accueil</a>
-            <a href="{{ route('event') }}">Événements</a>
-            <a href="{{ route('contact') }}">Contact</a>
+            <a href="index.html">Accueil</a>
+            <a href="evenement.html">Événements</a>
+            <a href="contact.html">Contact</a>
         </nav>
         <div class="nav-actions">
             <button class="btn-secondary">Se connecter</button>
@@ -36,7 +38,7 @@
                     <div class="contact-details">
                         <div class="detail-item">
                             <strong>Email :</strong>
-                            <span>contact@eventsphere.com</span>
+                            <span>contact@eventora.com</span>
                         </div>
                         <div class="detail-item">
                             <strong>Support :</strong>
@@ -80,7 +82,8 @@
                 <div class="footer-brand">
                     <div class="logo">
                         <div class="logo-icon"></div>
-                        <span>EventSphere</span>
+                        <img src="../logo/logo.png" alt="EventOra Logo" />
+                        <!--<span>EventOra</span>-->
                     </div>
                     <p>Transformer les événements, une gestion sans faille. La plateforme moderne pour les organisateurs d'événements.</p>
                 </div>
@@ -116,7 +119,7 @@
             </div>
 
             <div class="footer-bottom">
-                <p>© 2026 EventSphere Events. Tous droits réservés.</p>
+                <p>© 2026 EventOra Events. Tous droits réservés.</p>
                 <div class="social-icons">
                     <span class="social-circle">T</span>
                     <span class="social-circle">G</span>
