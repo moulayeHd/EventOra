@@ -85,8 +85,8 @@ body {
 
 /* HERO */
 .hero {
-  height: 100vh;
-  background: url('WhatsApp\ Image\ 2026-04-25\ at\ 19.03.29.jpeg') center/cover no-repeat;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #0a0e27, #11162f);
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-     <link rel="stylesheet" href="globals.css" />
-     <link rel="stylesheet" href="Index.css" />
-     
+    <title>Inscription EventOra</title>
+    <link rel="stylesheet" href="{{ asset('css/globals.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/Index.css') }}" />
 </head>
 <body>
     <!--- <header class="navbar">
@@ -64,7 +63,7 @@
 </div>
  </main>
 
-<script src="inscrip.js"></script>
+<script src="{{ asset('js/inscrip.js') }}"></script>
 
 </body>
 </html>

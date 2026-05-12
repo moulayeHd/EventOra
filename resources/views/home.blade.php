@@ -1,253 +1,193 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>EventOra</title>
+@extends('layouts.app')
 
-        <link rel="stylesheet" href="{{ asset('css/globals.css') }}" />
-        <link rel="stylesheet" href="{{ asset('css/Index.css') }}" />
-     
-    </head>
+@section('title', 'EventOra - Plateforme moderne pour événements')
 
-    <body>
-        <!-- NAVBAR -->
-        <header class="navbar">
-            <div class="logo">
-                <div class="logo-box">
-                   <img src="{{ asset('logo/Logo eventora.png') }}" alt="EventOra Logo" />
-                </div>
-            <!-- <span>EventOra</span> -->
+@section('content')
+    @php
+        $features = [
+            [
+                'title' => 'Création d’événements',
+                'text' => 'Lancez de superbes pages événementielles en quelques minutes avec des outils intuitifs.',
+                'icon' => 'icones/icone/creation d\'evenement.png',
+                'symbol' => '✦',
+            ],
+            [
+                'title' => 'Billetterie & inscription',
+                'text' => 'Vendez des billets, gérez les RSVP et suivez les paiements sans friction.',
+                'icon' => 'icones/icone/billetterie et inscription.jpg',
+                'symbol' => '◇',
+            ],
+            [
+                'title' => 'Gestion des participants',
+                'text' => 'Suivez les arrivées, segmentez vos audiences et personnalisez chaque interaction.',
+                'icon' => 'icones/icone/participation.png',
+                'symbol' => '◎',
+            ],
+            [
+                'title' => 'Reporting & analytics',
+                'text' => 'Des tableaux de bord en temps réel révèlent ce qui fonctionne et quoi optimiser ensuite.',
+                'icon' => 'icones/icone/analytique.png',
+                'symbol' => '△',
+            ],
+            [
+                'title' => 'Gestion des lieux',
+                'text' => 'Coordonnez les espaces, les plans et les capacités sur plusieurs sites.',
+                'icon' => 'icones/icone/gestion des lieux.png',
+                'symbol' => '□',
+            ],
+            [
+                'title' => 'Promotion intelligente',
+                'text' => 'Partagez vos événements, activez vos communautés et mesurez chaque canal.',
+                'icon' => 'icones/icone/promotion.png',
+                'symbol' => '×',
+            ],
+        ];
+
+        $events = [
+            [
+                'tag' => 'Conférence',
+                'date' => '14 mars',
+                'place' => 'Bamako',
+                'title' => 'TechSummit 2026',
+                'image' => 'images/image/IMAGE 1.png',
+                'slug' => 'techsummit-2026',
+            ],
+            [
+                'tag' => 'Musique',
+                'date' => '21 juin',
+                'place' => 'Ségou',
+                'title' => 'Solstice Festival',
+                'image' => 'images/image/IMAGE 2.png',
+                'slug' => 'solstice-festival',
+            ],
+            [
+                'tag' => 'Gala',
+                'date' => '8 septembre',
+                'place' => 'Paris',
+                'title' => 'Atelier Gala',
+                'image' => 'images/image/IMAGE 3.WEBP',
+                'slug' => 'atelier-gala',
+            ],
+        ];
+
+        $testimonials = [
+            [
+                'quote' => 'EventOra a transformé notre sommet annuel : moins de chaos, plus de précision. Notre équipe dort enfin la veille.',
+                'initials' => 'SR',
+                'name' => 'Sasha Renault',
+                'role' => 'Responsable événements, Northstar',
+            ],
+            [
+                'quote' => 'Le parcours d’accueil nous a économisé quarante heures d’équipe. Les participants l’ont remarqué immédiatement.',
+                'initials' => 'MV',
+                'name' => 'Marco Vela',
+                'role' => 'Producteur, Atlas Festivals',
+            ],
+            [
+                'quote' => 'Nous avons remplacé quatre outils par un seul. Le niveau de finition est impressionnant.',
+                'initials' => 'PA',
+                'name' => 'Priya Anand',
+                'role' => 'COO, Vertex Studios',
+            ],
+        ];
+    @endphp
+
+    <section class="hero-section">
+        <div class="hero-inner">
+            <p class="eyebrow pill"><span></span>Nouveau - Aperçus participants propulsés par l’IA</p>
+            <h1>Transformer les événements, <span>gérés sans effort.</span></h1>
+            <p class="hero-copy">La plateforme de bout en bout pour les organisateurs qui soignent chaque détail. Créez, vendez et pilotez des événements qui paraissent inévitables.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="{{ route('events') }}">Commencer à organiser</a>
+                <a class="btn btn-glass" href="{{ route('events') }}">Explorer les événements →</a>
             </div>
-
-            <nav class="nav-links">
-                <a href="index.html">Accueil</a>
-                <a href="evenement.html">Événements</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-
-            <div class="nav-actions">
-                <button class="btn-secondary">Se connecter</button>
-                <a href="Inscription.html" class="btn-primary">S’inscrire</a>
-            </div>
-        </header>
-
-        <!-- HERO -->
-         
-        <section class="hero">
-          
-            <h1>Organisez vos événements <span>facilement</span></h1>
-            <p>Une plateforme moderne pour créer, gérer et promouvoir vos événements.</p>
-              
-            <div class="hero-buttons">
-                <button class="btn-primary">Commencer</button>
-                <button class="btn-outline">Voir les événements</button>
-            </div>
-        </section>
-
-        <!-- FEATURES -->
-        <section class="features">
-            <h2>Boîte à outils complète sur l'événement</h2>
-            <p class="features-subtitle">
-                Tout ce dont vous avez besoin pour gérer des événements culturels de classe mondiale,
-                de la création à l'analyse en temps réel.
-            </p>
-
-            <div class="feature-grid">
-                <div class="card">
-                    <div class="icon blue">
-                        <img src="{{ asset('icone/creation d'evenement.png') }}" alt="Création d'Événements" />
-                    </div>
-                    <h3>Création d'Événements</h3>
-                    <p>Créez des événements en quelques minutes avec notre éditeur intuitif.</p>
+            <div class="stats-panel" aria-label="Statistiques EventOra">
+                <div>
+                    <strong>12.4K</strong>
+                    <span>événements hébergés</span>
                 </div>
-
-                <div class="card">
-                    <div class="icon green">
-                        <img src="{{ asset('icone/billetterie et inscription.jpg') }}" alt="Billetterie & Inscription" />
-                    </div>
-                    <h3>Billetterie & Inscription</h3>
-                    <p>Gérez VIP, paiements sécurisés et suivi en temps réel.</p>
+                <div>
+                    <strong>2.1M</strong>
+                    <span>billets vendus</span>
                 </div>
-
-                <div class="card">
-                    <div class="icon cyan">
-                        <img src="{{ asset('icone/participation.png') }}" alt="Gestion des Participants" />
-                    </div>
-                    <h3>Gestion des Participants</h3>
-                    <p>Suivez les inscriptions et gérez les listes facilement.</p>
-                </div>
-
-                <div class="card">
-                    <div class="icon yellow">
-                        <img src="{{ asset('icone/analytique.png') }}" alt="Analytics & Rapports" />
-                    </div>
-                    <h3>Analytics & Rapports</h3>
-                    <p>Analysez vos performances et optimisez vos événements.</p>
-                </div>
-
-                <div class="card">
-                    <div class="icon purple">
-                        <img src="{{ asset('icone/promotion.png') }}" alt="Promotion & Partage" />
-                    </div>
-                    <h3>Promotion & Partage</h3>
-                    <p>Diffusez vos événements et augmentez votre visibilité.</p>
-                </div>
-
-                <div class="card">
-                    <div class="icon red">
-                        <img src="{{ asset('icone/gestion des lieux.png') }}" alt="Gestion des Lieux" />
-                    </div>
-                    <h3>Gestion des Lieux</h3>
-                    <p>Gérez salles, capacités et disponibilités.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- EVENTS -->
-        <section class="events">
-            <h2>Evénements vedets</h2>
-
-            <div class="event-grid">
-                <!-- CARD 1 -->
-                <div class="event-card">
-                    <span class="event-tag">Conference</span>
-                    <img src="{{ asset('image/IMAGE 1.png') }}" alt="event" />
-                    <div class="event-overlay">
-                        <p>12 Mars • Bamako</p>
-                        <h3>Conference administrative</h3>
-                    </div>
-                </div>
-
-                <!-- CARD 2 -->
-                <div class="event-card">
-                    <span class="event-tag">Musique</span>
-                    <img src="{{ asset('image/IMAGE 2.png') }}" alt="event" />
-                    <div class="event-overlay">
-                        <p>21 Juin • Segou</p>
-                        <h3> Festival sur le Niger</h3>
-                    </div>
-                </div>
-
-                <!-- CARD 3 -->
-                <div class="event-card">
-                    <span class="event-tag">Gala</span>
-                    <img src="{{ asset('image/IMAGE 3.WEBP') }}" alt="event" />
-                    <div class="event-overlay">
-                        <p>18 Octobre • Bamako</p>
-                        <h3>KoKo Fashion</h3>
-                    </div>
+                <div>
+                    <strong>72</strong>
+                    <span>NPS moyen</span>
                 </div>
             </div>
-        </section>
-        <!-- end events -->
+        </div>
+    </section>
 
-        <!-- TESTIMONIALS -->
-        <section class="testimonials">
-            <p class="testimonials-top">Aimé par les équipes</p>
-            <h2>Validé par des experts de l'organisation d'événements</h2>
+    <section class="toolkit-section section-pad" id="features">
+        <div class="section-heading centered">
+            <p class="eyebrow">Boîte à outils événementielle</p>
+            <h2>Tout ce dont vous avez besoin.<span> Rien de superflu.</span></h2>
+        </div>
 
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <p class="quote">
-                        "Lumen a fait passer notre sommet annuel du chaos à la chorégraphie. Notre équipe a finalement dormi la nuit précédente."
-                    </p>
-                    <div class="user-info">
-                        <div class="avatar-circle sasha">SR</div>
+        <div class="feature-grid">
+            @foreach ($features as $feature)
+                <article class="feature-card">
+                    <div class="feature-icon">
+                        <img src="{{ asset($feature['icon']) }}" alt="">
+                        <span>{{ $feature['symbol'] }}</span>
+                    </div>
+                    <h3>{{ $feature['title'] }}</h3>
+                    <p>{{ $feature['text'] }}</p>
+                </article>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="events-section section-pad">
+        <div class="section-heading split">
+            <div>
+                <p class="eyebrow">À venir</p>
+                <h2>Événements à la une</h2>
+            </div>
+            <a class="text-link" href="{{ route('events') }}">Tout voir →</a>
+        </div>
+
+        <div class="event-card-grid">
+            @foreach ($events as $event)
+                <a class="event-card" href="{{ route('event.details', $event['slug']) }}">
+                    <span class="event-tag">{{ $event['tag'] }}</span>
+                    <img src="{{ asset($event['image']) }}" alt="{{ $event['title'] }}">
+                    <div class="event-card-body">
+                        <p>{{ $event['date'] }} <span>•</span> {{ $event['place'] }}</p>
+                        <h3>{{ $event['title'] }}</h3>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+    </section>
+
+    <section class="testimonials-section section-pad" id="testimonials">
+        <div class="section-heading centered">
+            <p class="eyebrow">Aimé par les équipes</p>
+            <h2>Adopté par des organisateurs de classe mondiale</h2>
+        </div>
+
+        <div class="testimonial-grid">
+            @foreach ($testimonials as $testimonial)
+                <article class="testimonial-card">
+                    <p>“{{ $testimonial['quote'] }}”</p>
+                    <div class="testimonial-author">
+                        <span>{{ $testimonial['initials'] }}</span>
                         <div>
-                            <h4>Sasha Renault</h4>
-                            <p>Responsable des événements, North Star</p>
+                            <strong>{{ $testimonial['name'] }}</strong>
+                            <small>{{ $testimonial['role'] }}</small>
                         </div>
                     </div>
-                </div>
+                </article>
+            @endforeach
+        </div>
+    </section>
 
-                <div class="testimonial-card">
-                    <p class="quote">
-                        "Le flux d'enregistrementà lui seul nous a permis d'économiser 40 heures de personnel. Les participants l'ont apprecié."
-                    </p>
-                    <div class="user-info">
-                        <div class="avatar-circle marco">MV</div>
-                        <div>
-                            <h4>Marco Vela</h4>
-                            <p>Producteur, Atlas Festivals</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="testimonial-card">
-                    <p class="quote">
-                        "Nous avons remplacé quatre outils par un seul. Le vernis est irréel."
-                    </p>
-                    <div class="user-info">
-                        <div class="avatar-circle priya">PA</div>
-                        <div>
-                            <h4>Priya Anand</h4>
-                            <p>COO, Vertex Studios</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- end testimonials -->
-
-        <section class="cta-section">
-            <div class="cta-card">
-                <h2>Votre prochain événement mérite <span>EventOra</span></h2>
-                <p>Commencez gratuitement. Passez à l'offre supérieure quand vous serez prêt. Aucune carte de crédit requise.</p>
-                <button class="btn-cta">Commencer à organiser votre événement</button>
-            </div>
-        </section>
-
-        <!-- FOOTER -->
-        <footer class="main-footer">
-            <div class="footer-container">
-                <div class="footer-brand">
-                    <div class="logo">
-                        <div class="logo-icon"></div>
-                         <img src="{{ asset('logo/logo.png') }}" alt="EventOra Logo" />
-                        <!--<span>EventSphere</span>-->
-                    </div>
-                    <p>Transformer les événements, une gestion sans faille. La plateforme moderne pour les organisateurs d'événements.</p>
-                </div>
-
-                <div class="footer-links">
-                    <div class="link-group">
-                        <h4>Produit</h4>
-                        <ul>
-                            <li><a href="#">Fonctionnalités</a></li>
-                            <li><a href="#">Tarifs</a></li>
-                            <li><a href="#">Événements</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="link-group">
-                        <h4>Entreprise</h4>
-                        <ul>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">À propos</a></li>
-                            <li><a href="#">Carrières</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="link-group">
-                        <h4>Légal</h4>
-                        <ul>
-                            <li><a href="#">Confidentialité</a></li>
-                            <li><a href="#">Conditions</a></li>
-                            <li><a href="#">Sécurité</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>© 2026 EventOra Events. Tous droits réservés.</p>
-                <div class="social-icons">
-                    <span class="social-circle">T</span>
-                    <span class="social-circle">G</span>
-                    <span class="social-circle">L</span>
-                </div>
-            </div>
-        </footer>
-    </body>
-</html>
+    <section class="cta-section section-pad" id="cta">
+        <div class="cta-card">
+            <h2>Votre prochain événement mérite <span>EventOra.</span></h2>
+            <p>Commencez gratuitement. Passez à l’offre supérieure quand vous êtes prêt. Aucune carte bancaire requise.</p>
+            <a class="btn btn-primary" href="{{ route('events') }}">Commencer à organiser votre événement</a>
+        </div>
+    </section>
+@endsection
