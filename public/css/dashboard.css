@@ -1,0 +1,161 @@
+/* PROJECT: EventSphere - Organizer Dashboard
+   STYLE: Premium Dark (Inspired by Lumen)
+*/
+
+:root {
+    --bg-main: #090b14;
+    --bg-sidebar: #11131f;
+    --bg-card: #161b2e;
+    --accent-blue: #3b82f6;
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-label: #475569;
+}
+
+.org-container {
+    display: flex;
+    height: 100vh;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* --- SIDEBAR EVENTSPHERE --- */
+.org-sidebar {
+    width: 260px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-subtle);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.org-sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 45px;
+    color: white;
+    letter-spacing: -0.5px;
+}
+
+/* Petit carré bleu pour le logo EventSphere */
+.logo-icon {
+    width: 28px;
+    height: 28px;
+    background: var(--accent-blue);
+    border-radius: 6px;
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-label);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 20px 0 12px 10px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+    background: rgba(255, 255, 255, 0.04);
+    color: white;
+}
+
+/* --- HEADER --- */
+.org-header {
+    height: 85px;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.org-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Bouton + Nouvel Événement PRO */
+.btn-primary {
+    background: var(--accent-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+/* --- CARTES DE STATISTIQUES --- */
+.org-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.org-main-view {
+    padding: 40px;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 32px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card .val {
+    font-size: 38px;
+    font-weight: 700;
+    color: white;
+    margin: 8px 0;
+}
+
+.stat-card .label {
+    color: var(--text-secondary);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* --- GRAPHIQUE --- */
+.chart-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 30px;
+    border-radius: 20px;
+}
