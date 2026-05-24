@@ -10,11 +10,10 @@ use App\Models\Billet;
 class Reservation extends Model
 {
     protected $fillable = [
-        'nom',
-        'prenom',
-        'email',
-        'evenement_id',
+        'user_id',
         'billet_id',
+        'quantite',
+        'ticket_code',
     ];
 
     public function user()

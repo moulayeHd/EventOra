@@ -26,16 +26,45 @@
                 <a href="{{ route('home') }}" class="{{ request()->routeIs('home') ? 'is-active' : '' }}">Accueil</a>
                 <a href="{{ route('events') }}" class="{{ request()->routeIs('events') || request()->routeIs('event.details') ? 'is-active' : '' }}">Événements</a>
                 <a href="{{ route('about') }}" class="{{ request()->routeIs('about') ? 'is-active' : '' }}">À propos</a>
+                @auth
+                    <a href="{{ route('reservations.index') }}" class="{{ request()->routeIs('reservations.*') || request()->routeIs('billets.index') ? 'is-active' : '' }}">Mes reservations</a>
+                    @if (auth()->user()->isOrganisateur() || auth()->user()->isAdmin())
+                        <a href="{{ route('organisateur') }}" class="{{ request()->routeIs('organisateur') ? 'is-active' : '' }}">Organisateur</a>
+                    @endif
+                    @if (auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="{{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}">Admin</a>
+                    @endif
+                @endauth
                 <a href="{{ route('contact') }}" class="{{ request()->routeIs('contact') ? 'is-active' : '' }}">Contact</a>
             </nav>
 
             <div class="header-actions">
-                <a class="signin-link" href="{{ route('contact') }}">Se connecter</a>
-                <a class="btn btn-primary btn-small" href="{{ route('events') }}">Commencer</a>
+                @auth
+                    <span class="signin-link">{{ auth()->user()->name }}</span>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button class="btn btn-glass btn-small" type="submit">Sortir</button>
+                    </form>
+                @else
+                    <a class="signin-link" href="{{ route('login') }}">Se connecter</a>
+                    <a class="btn btn-primary btn-small" href="{{ route('inscription') }}">Commencer</a>
+                @endauth
             </div>
         </header>
 
         <main>
+            @if (session('success'))
+                <div class="site-flash site-flash--success" role="status">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="site-flash site-flash--error" role="alert">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
             @yield('content')
         </main>
 

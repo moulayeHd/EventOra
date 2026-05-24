@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Reservation;
+use Illuminate\Support\Str;
+
+class BilletController extends Controller
+{
+    public function index()
+    {
+        $billets = Reservation::with(['billet.evenement.espace'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get()
+            ->map(fn (Reservation $reservation) => $this->attachQrData($reservation));
+
+        if (view()->exists('billets.index')) {
+            return view('billets.index', compact('billets'));
+        }
+
+        return response()->json($billets);
+    }
+
+    public function verify(string $code)
+    {
+        $reservation = Reservation::with(['user', 'billet.evenement.espace'])
+            ->where('ticket_code', $code)
+            ->firstOrFail();
+
+        return view('billets.verify', compact('reservation'));
+    }
+
+    private function attachQrData(Reservation $reservation): Reservation
+    {
+        if (! $reservation->ticket_code) {
+            $reservation->forceFill([
+                'ticket_code' => $this->makeTicketCode(),
+            ])->save();
+        }
+
+        $reservation->verification_url = route('billets.verify', $reservation->ticket_code);
+        $reservation->qr_code = 'https://quickchart.io/qr?size=220&text='.urlencode($reservation->verification_url);
+
+        return $reservation;
+    }
+
+    private function makeTicketCode(): string
+    {
+        do {
+            $code = 'EVT-'.now()->format('ymd').'-'.Str::upper(Str::random(8));
+        } while (Reservation::where('ticket_code', $code)->exists());
+
+        return $code;
+    }
+}

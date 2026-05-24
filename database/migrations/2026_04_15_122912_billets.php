@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,6 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (Schema::hasTable('billets')) {
+            return;
+        }
+
          Schema::create('billets', function (Blueprint $table) {
            $table->id();
             $table->string('type');
@@ -26,6 +31,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        if (DB::table('migrations')->where('migration', '2026_04_15_122837_billets')->exists()) {
+            return;
+        }
+
+        Schema::dropIfExists('billets');
     }
 };

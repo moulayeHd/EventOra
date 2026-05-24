@@ -1,69 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscription EventOra</title>
-    <link rel="stylesheet" href="{{ asset('css/globals.css') }}" />
-    <link rel="stylesheet" href="{{ asset('css/Index.css') }}" />
-</head>
-<body>
-    <!--- <header class="navbar">
-        <div class="logo">
-            <div class="logo-box">
-                <img src="../logo/logo.png" alt="EventOra Logo" />
-            </div>
-           
+@extends('layouts.app')
+
+@section('title', 'Inscription - EventOra')
+
+@section('content')
+    <section class="page-hero compact-hero">
+        <div class="hero-inner narrow">
+            <p class="eyebrow pill"><span></span>Nouveau compte</p>
+            <h1>Inscription EventOra</h1>
+            <p class="hero-copy">Creez un compte participant ou organisateur. Le role administrateur reste reserve a la gestion interne.</p>
         </div>
-        <nav class="nav-links">
-            <a href="index.html">Accueil</a>
-            <a href="evenement.html">Événements</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-   
-</div>
-</header>-->
-<main class="contact-page">
-        <div class="contact-container">
-            <div class="contact-content">
-                <div class="contact-text">
-                    <h1>Inscription <span>EventOra</span></h1>
-                    <p>Rejoignez notre communauté d'organisateurs d'événements et de participants passionnés. Inscrivez-vous dès aujourd'hui pour commencer à planifier, découvrir et participer à des événements incroyables avec EventOra.</p>
-                    
+    </section>
+
+    <section class="contact-section section-pad">
+        <form class="contact-form auth-form" action="{{ route('inscription.store') }}" method="POST">
+            @csrf
+
+            @if ($errors->any())
+                <div class="form-alert">
+                    {{ $errors->first() }}
                 </div>
-<div class="contact-glass-form">
-                    <form action="#">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Prénom</label>
-                                <input type="text" placeholder="Prénom">
-                            </div>
-                            <div class="form-group">
-                                <label>Nom</label>
-                                <input type="text" placeholder="Nom">
-                            </div>
-                        </div>
+            @endif
 
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" placeholder="Exemple@gmail.com">
-                        </div>
+            <div class="form-row">
+                <label>
+                    Prenom
+                    <input type="text" name="prenom" value="{{ old('prenom') }}" placeholder="Prenom" required>
+                </label>
+                <label>
+                    Nom
+                    <input type="text" name="nom" value="{{ old('nom') }}" placeholder="Nom" required>
+                </label>
+            </div>
 
-                        <div class="form-group">
-                            <label>Mot de passe</label>
-                            <input type="Password" placeholder="MOT DE PASSE">
-                        </div>
-                        <div class="form-group">
-                            <label>Confirmer Mot de passe</label>
-                            <input type="Password" placeholder="CONFIRMER MOT DE PASSE">
-                        </div>
-                         <button type="submit" class="btn-primary">S'inscrire</button>
-                         <a href="index.html" class="btn-primary" type="submit">Retourne à l'acceil</a>
-                     </form>
-</div>
- </main>
+            <label>
+                Email
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="exemple@email.com" required>
+            </label>
 
-<script src="{{ asset('js/inscrip.js') }}"></script>
+            <label>
+                Role
+                <select name="role" required>
+                    <option value="utilisateur" @selected(old('role') === 'utilisateur')>Utilisateur</option>
+                    <option value="organisateur" @selected(old('role') === 'organisateur')>Organisateur</option>
+                    <option value="administrateur" @selected(old('role') === 'administrateur')>Administrateur</option>
+                </select>
+            </label>
 
-</body>
-</html>
+            <div class="form-row">
+                <label>
+                    Mot de passe
+                    <input type="password" name="password" placeholder="8 caracteres minimum" required>
+                </label>
+                <label>
+                    Confirmation
+                    <input type="password" name="password_confirmation" placeholder="Repetez le mot de passe" required>
+                </label>
+            </div>
+
+            <button class="btn btn-primary" type="submit">S'inscrire</button>
+            <a class="text-link" href="{{ route('login') }}">J'ai deja un compte</a>
+        </form>
+    </section>
+@endsection

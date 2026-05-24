@@ -43,7 +43,7 @@
             ],
         ];
 
-        $events = [
+        $fallbackEvents = [
             [
                 'tag' => 'Conférence',
                 'date' => '14 mars',
@@ -68,6 +68,12 @@
                 'image' => 'images/image/IMAGE 3.WEBP',
                 'slug' => 'atelier-gala',
             ],
+        ];
+
+        $eventImages = [
+            'images/image/IMAGE 1.png',
+            'images/image/IMAGE 2.png',
+            'images/image/IMAGE 3.WEBP',
         ];
 
         $testimonials = [
@@ -148,16 +154,27 @@
         </div>
 
         <div class="event-card-grid">
-            @foreach ($events as $event)
-                <a class="event-card" href="{{ route('event.details', $event['slug']) }}">
-                    <span class="event-tag">{{ $event['tag'] }}</span>
-                    <img src="{{ asset($event['image']) }}" alt="{{ $event['title'] }}">
+            @forelse (($events ?? collect()) as $event)
+                <a class="event-card" href="{{ route('event.details', $event) }}">
+                    <span class="event-tag">{{ $event->espace?->nom ?? 'Evenement' }}</span>
+                    <img src="{{ $event->imageUrl($eventImages[$loop->index % count($eventImages)]) }}" alt="{{ $event->nom }}">
                     <div class="event-card-body">
-                        <p>{{ $event['date'] }} <span>•</span> {{ $event['place'] }}</p>
-                        <h3>{{ $event['title'] }}</h3>
+                        <p>{{ \Illuminate\Support\Carbon::parse($event->date)->format('d/m/Y') }} - {{ $event->espace?->localisation ?? 'Lieu a confirmer' }}</p>
+                        <h3>{{ $event->nom }}</h3>
                     </div>
                 </a>
-            @endforeach
+            @empty
+                @foreach ($fallbackEvents as $event)
+                    <a class="event-card" href="{{ route('events') }}">
+                        <span class="event-tag">{{ $event['tag'] }}</span>
+                        <img src="{{ asset($event['image']) }}" alt="{{ $event['title'] }}">
+                        <div class="event-card-body">
+                            <p>{{ $event['date'] }} - {{ $event['place'] }}</p>
+                            <h3>{{ $event['title'] }}</h3>
+                        </div>
+                    </a>
+                @endforeach
+            @endforelse
         </div>
     </section>
 

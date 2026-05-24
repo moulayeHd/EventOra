@@ -8,8 +8,9 @@ use App\Models\Evenement;
 class Programme extends Model
 {
     protected $fillable = [
-        'nom',
+        'titre',
         'description',
+        'heure',
         'evenement_id',
     ];
 
