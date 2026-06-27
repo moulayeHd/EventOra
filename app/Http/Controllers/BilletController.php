@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
-use Illuminate\Support\Str;
+
 
 class BilletController extends Controller
 {
@@ -35,7 +35,7 @@ class BilletController extends Controller
     {
         if (! $reservation->ticket_code) {
             $reservation->forceFill([
-                'ticket_code' => $this->makeTicketCode(),
+                'ticket_code' => Reservation::generateTicketCode(),
             ])->save();
         }
 
@@ -45,12 +45,5 @@ class BilletController extends Controller
         return $reservation;
     }
 
-    private function makeTicketCode(): string
-    {
-        do {
-            $code = 'EVT-'.now()->format('ymd').'-'.Str::upper(Str::random(8));
-        } while (Reservation::where('ticket_code', $code)->exists());
-
-        return $code;
-    }
+   
 }

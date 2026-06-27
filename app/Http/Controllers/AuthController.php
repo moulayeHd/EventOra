@@ -47,15 +47,21 @@ class AuthController extends Controller
             'role' => ['required', Rule::in([
                 User::ROLE_UTILISATEUR,
                 User::ROLE_ORGANISATEUR,
-                User::ROLE_ADMINISTRATEUR,
+                // ROLE_ADMINISTRATEUR supprimé du formulaire public
             ])],
         ]);
+
+        // Si quelqu'un s'inscrit comme organisateur
+        // son rôle réel devient "organisateur_en_attente"
+        $role = $validated['role'] === User::ROLE_ORGANISATEUR
+            ? User::ROLE_EN_ATTENTE
+            : User::ROLE_UTILISATEUR;
 
         $user = User::create([
             'name' => trim($validated['prenom'].' '.$validated['nom']),
             'email' => $validated['email'],
             'password' => $validated['password'],
-            'role' => $validated['role'],
+            'role' => $role,
         ]);
 
         Auth::login($user);
@@ -81,6 +87,11 @@ class AuthController extends Controller
 
         if ($user->isOrganisateur()) {
             return route('organisateur');
+        }
+
+        // Organisateur en attente → page d'attente
+        if ($user->isEnAttente()) {
+            return route('attente.validation');
         }
 
         return route('events');

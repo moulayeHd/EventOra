@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 use App\Models\User;
 use App\Models\Billet;
@@ -24,5 +25,14 @@ class Reservation extends Model
     public function billet()
     {
         return $this->belongsTo(Billet::class);
+    }
+
+    public static function generateTicketCode(): string
+    {
+      do {
+          $code = 'EVT-'.now()->format('ymd').'-'.Str::upper(Str::random(8));
+         } while (self::where('ticket_code', $code)->exists());
+
+       return $code;
     }
 }

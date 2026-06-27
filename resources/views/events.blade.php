@@ -53,5 +53,9 @@
                 </article>
             @endforelse
         </div>
+        {{-- Pagination --}}
+        <div style="margin-top: 2rem; display: flex; justify-content: center;">
+            {{ $events->links() }}
+        </div>
     </section>
 @endsection

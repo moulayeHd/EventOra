@@ -13,7 +13,7 @@ class EventController extends Controller
     {
         $events = Evenement::with(['espace', 'programmes', 'billets'])
             ->orderBy('date')
-            ->get();
+            ->paginate(12);
 
         return view('events', compact('events'));
     }
@@ -21,17 +21,37 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'date' => ['required', 'date'],
-            'heure_debut' => ['required', 'date_format:H:i'],
-            'heure_fin' => ['required', 'date_format:H:i', 'after:heure_debut'],
-            'espace_id' => ['required', 'exists:espaces,id'],
-            'ticket_type' => ['required', 'string', 'max:100'],
-            'ticket_price' => ['required', 'numeric', 'min:0'],
+            'nom'             => ['required', 'string', 'max:255'],
+            'description'     => ['required', 'string'],
+            'image'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'date'            => ['required', 'date', 'after:today'],
+            'heure_debut'     => ['required', 'date_format:H:i'],
+            'heure_fin'       => ['required', 'date_format:H:i', 'after:heure_debut'],
+            'espace_id'       => ['required', 'exists:espaces,id'],
+            'ticket_type'     => ['required', 'string', 'max:100'],
+            'ticket_price'    => ['required', 'numeric', 'min:0'],
             'ticket_quantity' => ['required', 'integer', 'min:1'],
         ]);
+
+        // ─── Vérification conflit de lieu ──────────────────
+        $conflit = $this->detecterConflit(
+            $validated['espace_id'],
+            $validated['date'],
+            $validated['heure_debut'],
+            $validated['heure_fin']
+        );
+
+        if ($conflit) {
+            return back()
+                ->withErrors([
+                    'espace_id' => 'Ce lieu est déjà réservé le ' .
+                        \Carbon\Carbon::parse($validated['date'])->format('d/m/Y') .
+                        ' de ' . $conflit->heure_debut . ' à ' . $conflit->heure_fin .
+                        ' par l\'événement "' . $conflit->nom . '".' .
+                        ' Veuillez choisir un autre lieu ou modifier les horaires.'
+                ])
+                ->withInput();
+        }
 
         $eventData = collect($validated)
             ->only(['nom', 'description', 'date', 'heure_debut', 'heure_fin', 'espace_id'])
@@ -48,9 +68,9 @@ class EventController extends Controller
 
             Billet::create([
                 'evenement_id' => $event->id,
-                'type' => $validated['ticket_type'],
-                'prix' => $validated['ticket_price'],
-                'quantite' => $validated['ticket_quantity'],
+                'type'         => $validated['ticket_type'],
+                'prix'         => $validated['ticket_price'],
+                'quantite'     => $validated['ticket_quantity'],
             ]);
 
             return $event;
@@ -63,7 +83,7 @@ class EventController extends Controller
         }
 
         if ($request->input('source') === 'admin') {
-            return redirect(route('admin.dashboard').'#events')
+            return redirect(route('admin.dashboard') . '#events')
                 ->with('success', 'Evenement cree avec succes.');
         }
 
@@ -84,14 +104,35 @@ class EventController extends Controller
         $this->authorizeEventManagement($event);
 
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
+            'nom'         => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'date' => ['required', 'date'],
+            'image'       => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'date'        => ['required', 'date', 'after:today'],
             'heure_debut' => ['required', 'date_format:H:i'],
-            'heure_fin' => ['required', 'date_format:H:i', 'after:heure_debut'],
-            'espace_id' => ['required', 'exists:espaces,id'],
+            'heure_fin'   => ['required', 'date_format:H:i', 'after:heure_debut'],
+            'espace_id'   => ['required', 'exists:espaces,id'],
         ]);
+
+        // ─── Vérification conflit (en excluant l'événement actuel) ──
+        $conflit = $this->detecterConflit(
+            $validated['espace_id'],
+            $validated['date'],
+            $validated['heure_debut'],
+            $validated['heure_fin'],
+            $event->id // ← exclure l'événement qu'on est en train de modifier
+        );
+
+        if ($conflit) {
+            return back()
+                ->withErrors([
+                    'espace_id' => 'Ce lieu est déjà réservé le ' .
+                        \Carbon\Carbon::parse($validated['date'])->format('d/m/Y') .
+                        ' de ' . $conflit->heure_debut . ' à ' . $conflit->heure_fin .
+                        ' par l\'événement "' . $conflit->nom . '".' .
+                        ' Veuillez choisir un autre lieu ou modifier les horaires.'
+                ])
+                ->withInput();
+        }
 
         if ($request->hasFile('image')) {
             $validated['image_path'] = $request->file('image')->store('events', 'public');
@@ -117,13 +158,35 @@ class EventController extends Controller
         }
 
         if ($request->input('source') === 'admin') {
-            return redirect(route('admin.dashboard').'#events')
+            return redirect(route('admin.dashboard') . '#events')
                 ->with('success', 'Evenement supprime avec succes.');
         }
 
         return redirect()
             ->route('events')
             ->with('success', 'Evenement supprime avec succes.');
+    }
+
+    // ─── Méthode privée : détecter un conflit ──────────────
+    private function detecterConflit(
+        int $espaceId,
+        string $date,
+        string $heureDebut,
+        string $heureFin,
+        ?int $exclureEventId = null
+    ): ?Evenement {
+        return Evenement::where('espace_id', $espaceId)
+            ->where('date', $date)
+            ->where(function ($query) use ($heureDebut, $heureFin) {
+                $query->where(function ($q) use ($heureDebut, $heureFin) {
+                    $q->where('heure_debut', '<', $heureFin)
+                      ->where('heure_fin', '>', $heureDebut);
+                });
+            })
+            ->when($exclureEventId, function ($query) use ($exclureEventId) {
+                $query->where('id', '!=', $exclureEventId);
+            })
+            ->first();
     }
 
     private function authorizeEventManagement(Evenement $event): void

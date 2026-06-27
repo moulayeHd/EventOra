@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Billet;
-use App\Models\Evenement;
+use App\Models\DemandeOrganisateur;
 use App\Models\Espace;
+use App\Models\Evenement;
+use App\Models\Notification;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -26,8 +28,7 @@ class AdminController extends Controller
             ->orderByDesc('date')
             ->get();
 
-        $users = User::latest()
-            ->get();
+        $users = User::latest()->get();
 
         $espaces = Espace::withCount('evenements')
             ->orderBy('nom')
@@ -37,29 +38,38 @@ class AdminController extends Controller
             ->latest()
             ->get();
 
+        // Demandes organisateur en attente
+        $demandes = DemandeOrganisateur::with('user')
+            ->orderBy('statut')
+            ->latest()
+            ->get();
+
+        $demandesEnAttente = $demandes->where('statut', 'en_attente')->count();
+
         $eventRows = $events->map(function (Evenement $event) use ($reservations) {
             $eventReservations = $reservations->filter(
                 fn (Reservation $reservation) => $reservation->billet?->evenement_id === $event->id
             );
 
             return [
-                'model' => $event,
-                'name' => $event->nom,
-                'organizer' => $event->organisateur?->name ?? 'Non assigne',
-                'location' => $event->espace?->localisation ?? $event->espace?->nom ?? 'Lieu non defini',
-                'date' => Carbon::parse($event->date),
+                'model'        => $event,
+                'name'         => $event->nom,
+                'organizer'    => $event->organisateur?->name ?? 'Non assigne',
+                'location'     => $event->espace?->localisation ?? $event->espace?->nom ?? 'Lieu non defini',
+                'date'         => Carbon::parse($event->date),
                 'reservations' => $event->reservations_count,
                 'tickets_sold' => $eventReservations->sum('quantite'),
-                'revenue' => $eventReservations->sum(
+                'revenue'      => $eventReservations->sum(
                     fn (Reservation $reservation) => $reservation->quantite * (float) ($reservation->billet?->prix ?? 0)
                 ),
             ];
         });
 
         $ticketsSold = $reservations->sum('quantite');
-        $revenue = $reservations->sum(
+        $revenue     = $reservations->sum(
             fn (Reservation $reservation) => $reservation->quantite * (float) ($reservation->billet?->prix ?? 0)
         );
+
         $upcomingEvents = $eventRows
             ->filter(fn (array $row) => $row['date']->isFuture() || $row['date']->isToday())
             ->sortBy('date')
@@ -71,33 +81,81 @@ class AdminController extends Controller
         }
 
         return view('admin.dashboard', [
-            'admin' => $admin,
-            'stats' => [
-                'users' => User::count(),
-                'organisateurs' => $roleStats[User::ROLE_ORGANISATEUR] ?? 0,
-                'administrateurs' => $roleStats[User::ROLE_ADMINISTRATEUR] ?? 0,
-                'utilisateurs' => $roleStats[User::ROLE_UTILISATEUR] ?? 0,
-                'events' => Evenement::count(),
-                'billets' => Billet::count(),
-                'reservations' => Reservation::count(),
-                'tickets_sold' => $ticketsSold,
-                'revenue' => $revenue,
+            'admin'             => $admin,
+            'stats'             => [
+                'users'          => User::count(),
+                'organisateurs'  => $roleStats[User::ROLE_ORGANISATEUR] ?? 0,
+                'administrateurs'=> $roleStats[User::ROLE_ADMINISTRATEUR] ?? 0,
+                'utilisateurs'   => $roleStats[User::ROLE_UTILISATEUR] ?? 0,
+                'en_attente'     => $roleStats[User::ROLE_EN_ATTENTE] ?? 0,
+                'events'         => Evenement::count(),
+                'billets'        => Billet::count(),
+                'reservations'   => Reservation::count(),
+                'tickets_sold'   => $ticketsSold,
+                'revenue'        => $revenue,
             ],
-            'users' => $users,
-            'recentUsers' => $users->take(5),
-            'eventRows' => $eventRows,
-            'upcomingEvents' => $upcomingEvents,
-            'espaces' => $espaces,
+            'users'             => $users,
+            'recentUsers'       => $users->take(5),
+            'eventRows'         => $eventRows,
+            'upcomingEvents'    => $upcomingEvents,
+            'espaces'           => $espaces,
+            'demandes'          => $demandes,
+            'demandesEnAttente' => $demandesEnAttente,
         ]);
     }
 
+    // ─── Approuver une demande organisateur ────────────────
+    public function approuverDemande(DemandeOrganisateur $demande)
+    {
+        $demande->update(['statut' => 'approuve']);
+
+        // Changer le rôle de l'utilisateur
+        $demande->user->update(['role' => User::ROLE_ORGANISATEUR]);
+
+        // Envoyer une notification à l'utilisateur
+        Notification::create([
+            'user_id' => $demande->user_id,
+            'titre'   => 'Demande approuvée ! 🎉',
+            'message' => 'Félicitations ' . $demande->user->name . ' ! Votre demande pour le groupe "' . $demande->nom_groupe . '" a été approuvée. Vous pouvez maintenant créer vos événements sur EventOra.',
+            'type'    => 'succes',
+        ]);
+
+        return redirect(route('admin.dashboard') . '#demandes')
+            ->with('success', 'Demande approuvée. ' . $demande->user->name . ' est maintenant organisateur.');
+    }
+
+    // ─── Refuser une demande organisateur ──────────────────
+    public function refuserDemande(Request $request, DemandeOrganisateur $demande)
+    {
+        $request->validate([
+            'message_refus' => ['required', 'string', 'min:10'],
+        ]);
+
+        $demande->update([
+            'statut'        => 'refuse',
+            'message_refus' => $request->message_refus,
+        ]);
+
+        // Envoyer une notification à l'utilisateur
+        Notification::create([
+            'user_id' => $demande->user_id,
+            'titre'   => 'Demande refusée',
+            'message' => 'Votre demande pour le groupe "' . $demande->nom_groupe . '" a été refusée. Raison : ' . $request->message_refus . '. Vous pouvez modifier votre demande et la soumettre à nouveau.',
+            'type'    => 'refus',
+        ]);
+
+        return redirect(route('admin.dashboard') . '#demandes')
+            ->with('success', 'Demande refusée. Une notification a été envoyée à ' . $demande->user->name . '.');
+    }
+
+    // ─── Gestion utilisateurs ───────────────────────────────
     public function storeUser(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', Rule::in([
+            'role'     => ['required', Rule::in([
                 User::ROLE_UTILISATEUR,
                 User::ROLE_ORGANISATEUR,
                 User::ROLE_ADMINISTRATEUR,
@@ -106,47 +164,62 @@ class AdminController extends Controller
 
         User::create($validated);
 
-        return redirect(route('admin.dashboard').'#users')
+        return redirect(route('admin.dashboard') . '#users')
             ->with('success', 'Utilisateur cree avec succes.');
     }
 
     public function destroyUser(User $user)
     {
         if ($user->id === auth()->id()) {
-            return redirect(route('admin.dashboard').'#users')
+            return redirect(route('admin.dashboard') . '#users')
                 ->withErrors(['user' => 'Vous ne pouvez pas supprimer votre propre compte.']);
         }
 
         $user->delete();
 
-        return redirect(route('admin.dashboard').'#users')
+        return redirect(route('admin.dashboard') . '#users')
             ->with('success', 'Utilisateur supprime avec succes.');
     }
 
+    // ─── Gestion espaces ────────────────────────────────────
     public function storeVenue(Request $request)
     {
         $validated = $request->validate([
-            'nom' => ['required', 'string', 'max:255'],
-            'localisation' => ['required', 'string', 'max:255'],
-            'capacite' => ['required', 'integer', 'min:1'],
+            'nom'         => ['required', 'string', 'max:255'],
+            'localisation'=> ['required', 'string', 'max:255'],
+            'capacite'    => ['required', 'integer', 'min:1'],
         ]);
 
         Espace::create($validated);
 
-        return redirect(route('admin.dashboard').'#settings')
+        return redirect(route('admin.dashboard') . '#settings')
             ->with('success', 'Lieu ajoute avec succes.');
+    }
+
+    public function updateVenue(Request $request, Espace $espace)
+    {
+        $validated = $request->validate([
+            'nom'         => ['required', 'string', 'max:255'],
+            'localisation'=> ['required', 'string', 'max:255'],
+            'capacite'    => ['required', 'integer', 'min:1'],
+        ]);
+
+        $espace->update($validated);
+
+        return redirect(route('admin.dashboard') . '#settings')
+            ->with('success', 'Lieu modifie avec succes.');
     }
 
     public function destroyVenue(Espace $espace)
     {
         if ($espace->evenements()->exists()) {
-            return redirect(route('admin.dashboard').'#settings')
+            return redirect(route('admin.dashboard') . '#settings')
                 ->withErrors(['espace' => 'Ce lieu contient deja des evenements.']);
         }
 
         $espace->delete();
 
-        return redirect(route('admin.dashboard').'#settings')
+        return redirect(route('admin.dashboard') . '#settings')
             ->with('success', 'Lieu supprime avec succes.');
     }
 }

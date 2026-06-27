@@ -6,7 +6,7 @@ use App\Models\Billet;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+
 
 class ReservationController extends Controller
 {
@@ -46,7 +46,7 @@ class ReservationController extends Controller
                 'user_id' => auth()->id(),
                 'billet_id' => $billet->id,
                 'quantite' => $validated['quantite'],
-                'ticket_code' => $this->makeTicketCode(),
+                'ticket_code' =>Reservation::generateTicketCode(),
             ]);
         });
 
@@ -124,12 +124,5 @@ class ReservationController extends Controller
             ->with('success', 'Reservation annulee avec succes.');
     }
 
-    private function makeTicketCode(): string
-    {
-        do {
-            $code = 'EVT-'.now()->format('ymd').'-'.Str::upper(Str::random(8));
-        } while (Reservation::where('ticket_code', $code)->exists());
-
-        return $code;
-    }
+   
 }

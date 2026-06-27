@@ -7,7 +7,7 @@
         <div class="hero-inner narrow">
             <p class="eyebrow pill"><span></span>Nouveau compte</p>
             <h1>Inscription EventOra</h1>
-            <p class="hero-copy">Creez un compte participant ou organisateur. Le role administrateur reste reserve a la gestion interne.</p>
+            <p class="hero-copy">Créez un compte participant ou organisateur.</p>
         </div>
     </section>
 
@@ -42,9 +42,14 @@
                 <select name="role" required>
                     <option value="utilisateur" @selected(old('role') === 'utilisateur')>Utilisateur</option>
                     <option value="organisateur" @selected(old('role') === 'organisateur')>Organisateur</option>
-                    <option value="administrateur" @selected(old('role') === 'administrateur')>Administrateur</option>
+                    {{-- Option administrateur supprimée --}}
                 </select>
             </label>
+
+            {{-- Message informatif si organisateur choisi --}}
+            <div id="msg-organisateur" style="display:none; background:#FFF8E1; border-left: 3px solid #F59E0B; padding: 10px 14px; border-radius: 6px; font-size: 13px; color: #92400E; margin-top: -8px;">
+                ⏳ Votre demande sera examinée par l'administrateur avant activation.
+            </div>
 
             <div class="form-row">
                 <label>
@@ -61,4 +66,17 @@
             <a class="text-link" href="{{ route('login') }}">J'ai deja un compte</a>
         </form>
     </section>
+
+    {{-- Script pour afficher le message si organisateur est choisi --}}
+    <script>
+        const select = document.querySelector('select[name="role"]');
+        const msg = document.getElementById('msg-organisateur');
+
+        function toggleMsg() {
+            msg.style.display = select.value === 'organisateur' ? 'block' : 'none';
+        }
+
+        select.addEventListener('change', toggleMsg);
+        toggleMsg(); // Au chargement si old('role') = organisateur
+    </script>
 @endsection

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -21,10 +20,21 @@ class User extends Authenticatable
     public const ROLE_UTILISATEUR = 'utilisateur';
     public const ROLE_ORGANISATEUR = 'organisateur';
     public const ROLE_ADMINISTRATEUR = 'administrateur';
+    public const ROLE_EN_ATTENTE = 'organisateur_en_attente'; 
 
     public function reservations(): HasMany
     {
         return $this->hasMany(Reservation::class);
+    }
+
+    public function demandes(): HasMany
+    {
+        return $this->hasMany(DemandeOrganisateur::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 
     public function hasRole(string|array $roles): bool
@@ -40,6 +50,22 @@ class User extends Authenticatable
     public function isOrganisateur(): bool
     {
         return $this->role === self::ROLE_ORGANISATEUR;
+    }
+
+    public function isEnAttente(): bool
+    {
+        return $this->role === self::ROLE_EN_ATTENTE;
+    }
+
+    public function isUtilisateur(): bool
+    {
+        return $this->role === self::ROLE_UTILISATEUR;
+    }
+
+    // Nombre de notifications non lues
+    public function notificationsNonLues(): int
+    {
+        return $this->notifications()->where('lu', false)->count();
     }
 
     /**

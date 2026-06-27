@@ -2,93 +2,101 @@
 
 namespace Database\Seeders;
 
-use App\Models\Billet;
+use App\Models\DemandeOrganisateur;
 use App\Models\Espace;
-use App\Models\Evenement;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        $admin = User::updateOrCreate(
-            ['email' => 'admin@eventora.test'],
+        // ─── Admin principal ────────────────────────────────
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@eventora.ml'],
             [
-                'name' => 'Admin EventOra',
-                'password' => 'password',
-                'role' => User::ROLE_ADMINISTRATEUR,
-            ],
+                'name'     => 'Administrateur EventOra',
+                'password' => bcrypt('Admin@2026'),
+                'role'     => User::ROLE_ADMINISTRATEUR,
+            ]
         );
 
-        $organisateur = User::updateOrCreate(
-            ['email' => 'organisateur@eventora.test'],
+        // ─── Organisateurs par défaut ───────────────────────
+        $organisateur1 = User::firstOrCreate(
+            ['email' => 'lions@eventora.ml'],
             [
-                'name' => 'Organisateur EventOra',
-                'password' => 'password',
-                'role' => User::ROLE_ORGANISATEUR,
-            ],
+                'name'     => 'Moussa Traoré',
+                'password' => bcrypt('Orga@2026'),
+                'role'     => User::ROLE_ORGANISATEUR,
+            ]
         );
 
-        $utilisateur = User::updateOrCreate(
-            ['email' => 'utilisateur@eventora.test'],
+        $organisateur2 = User::firstOrCreate(
+            ['email' => 'bamako.events@eventora.ml'],
             [
-                'name' => 'Utilisateur EventOra',
-                'password' => 'password',
-                'role' => User::ROLE_UTILISATEUR,
-            ],
+                'name'     => 'Fatoumata Diallo',
+                'password' => bcrypt('Orga@2026'),
+                'role'     => User::ROLE_ORGANISATEUR,
+            ]
         );
 
-        $espace = Espace::updateOrCreate(
-            ['nom' => 'Palais de la Culture'],
+        // ─── Demandes approuvées pour les organisateurs ─────
+        DemandeOrganisateur::firstOrCreate(
+            ['user_id' => $organisateur1->id],
             [
-                'localisation' => 'Bamako',
-                'capacite' => 1200,
-            ],
+                'nom_groupe'      => 'Les Lions de Bamako',
+                'type_evenements' => 'concert',
+                'telephone'       => '+223 70 11 22 33',
+                'description'     => 'Groupe de jeunes passionnés de musique qui organisent des concerts et soirées culturelles à Bamako depuis 2020. Notre public cible est la jeunesse malienne.',
+                'statut'          => 'approuve',
+            ]
         );
 
-        Espace::updateOrCreate(
-            ['nom' => 'Centre EventOra'],
+        DemandeOrganisateur::firstOrCreate(
+            ['user_id' => $organisateur2->id],
             [
-                'localisation' => 'Paris',
-                'capacite' => 600,
-            ],
+                'nom_groupe'      => 'Bamako Events Pro',
+                'type_evenements' => 'gala',
+                'telephone'       => '+223 76 44 55 66',
+                'description'     => 'Association professionnelle spécialisée dans l\'organisation de galas, conférences et événements d\'entreprise à Bamako et dans les régions du Mali.',
+                'statut'          => 'approuve',
+            ]
         );
 
-        $event = Evenement::updateOrCreate(
-            ['nom' => 'TechSummit 2026'],
+        // ─── Espaces par défaut ─────────────────────────────
+        $espaces = [
             [
-                'user_id' => $organisateur->id,
-                'description' => 'Une journee de conferences, ateliers et rencontres autour des experiences numeriques.',
-                'date' => '2026-06-20',
-                'heure_debut' => '09:00',
-                'heure_fin' => '18:00',
-                'espace_id' => $espace->id,
+                'nom'          => 'Palais de la Culture',
+                'localisation' => 'Bamako, Badalabougou',
+                'capacite'     => 2000,
             ],
-        );
+            [
+                'nom'          => 'Stade Omnisports Modibo Keïta',
+                'localisation' => 'Bamako, Hippodrome',
+                'capacite'     => 10000,
+            ],
+            [
+                'nom'          => 'Salle Omnisports de Bamako',
+                'localisation' => 'Bamako, ACI 2000',
+                'capacite'     => 5000,
+            ],
+            [
+                'nom'          => 'Centre Culturel Français',
+                'localisation' => 'Bamako, Hamdallaye',
+                'capacite'     => 500,
+            ],
+            [
+                'nom'          => 'Hôtel Radisson Blu',
+                'localisation' => 'Bamako, Quartier du Fleuve',
+                'capacite'     => 800,
+            ],
+        ];
 
-        Billet::updateOrCreate(
-            ['evenement_id' => $event->id, 'type' => 'Standard'],
-            [
-                'prix' => 5000,
-                'quantite' => 100,
-            ],
-        );
-
-        Billet::updateOrCreate(
-            ['evenement_id' => $event->id, 'type' => 'VIP'],
-            [
-                'prix' => 15000,
-                'quantite' => 30,
-            ],
-        );
+        foreach ($espaces as $espace) {
+            Espace::firstOrCreate(
+                ['nom' => $espace['nom']],
+                $espace
+            );
+        }
     }
 }

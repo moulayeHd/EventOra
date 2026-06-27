@@ -56,7 +56,11 @@
                             @csrf
                             @method('DELETE')
                             <input type="hidden" name="source" value="organizer">
-                            <button class="organizer-icon-button organizer-danger" type="submit" aria-label="Supprimer">
+                            <button
+                                class="organizer-icon-button organizer-danger"
+                                type="submit"
+                                aria-label="Supprimer"
+                                onclick="return confirm('Voulez-vous vraiment supprimer l\'événement « {{ $row['name'] }} » ? Cette action est irréversible.')">
                                 <x-organizer.icon name="x" />
                             </button>
                         </form>
