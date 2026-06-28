@@ -7,6 +7,7 @@
         @include('admin.pages.overview')
         @include('admin.pages.users')
         @include('admin.pages.events')
+        @include('admin.pages.demandes')
         @include('admin.pages.settings')
     </div>
 @endsection

@@ -6,6 +6,7 @@
         ['section' => 'participants', 'label' => 'Participants', 'icon' => 'users', 'title' => 'Participants', 'subtitle' => $stats['participants'].' participant(s) uniques.'],
         ['section' => 'payments', 'label' => 'Paiements', 'icon' => 'wallet', 'title' => 'Paiements', 'subtitle' => 'Revenus, tiers de prix et suivi financier.'],
         ['section' => 'statistics', 'label' => 'Statistiques', 'icon' => 'chart', 'title' => 'Statistiques', 'subtitle' => 'Analyse des ventes, conversion et tendance.'],
+        ['section' => 'calendrier', 'label' => 'Disponibilite', 'icon' => 'calendar', 'title' => 'Disponibilite des espaces', 'subtitle' => 'Consultez les creneaux disponibles avant de creer un evenement.'],
         ['section' => 'settings', 'label' => 'Parametres', 'icon' => 'settings', 'title' => 'Parametres', 'subtitle' => 'Profil, securite et preferences de votre espace.'],
     ];
 @endphp

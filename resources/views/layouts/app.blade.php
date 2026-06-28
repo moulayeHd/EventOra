@@ -40,6 +40,19 @@
 
             <div class="header-actions">
                 @auth
+                    {{-- Cloche notifications --}}
+                    @php
+                        $nonLues = auth()->user()->notificationsNonLues();
+                    @endphp
+                    <a href="{{ route('notifications.index') }}" style="position:relative; display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:50%; background:var(--color-background-secondary, #1a1a2e); color:var(--color-text-primary, #fff); text-decoration:none;" aria-label="Notifications">
+                        🔔
+                        @if ($nonLues > 0)
+                            <span style="position:absolute; top:-2px; right:-2px; background:#EF4444; color:white; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; line-height:1;">
+                                {{ $nonLues > 9 ? '9+' : $nonLues }}
+                            </span>
+                        @endif
+                    </a>
+
                     <span class="signin-link">{{ auth()->user()->name }}</span>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

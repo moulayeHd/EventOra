@@ -10,6 +10,7 @@
         @include('organizer.pages.participants')
         @include('organizer.pages.payments')
         @include('organizer.pages.statistics')
+         @include('organizer.pages.calendrier')
         @include('organizer.pages.settings')
     </div>
 @endsection

@@ -169,20 +169,30 @@ class OrganisateurController extends Controller
             'venues' => $venues->where('events_count', '>', 0)->count(),
         ];
 
-        return view('organizer.dashboard', [
-            'user' => $user,
-            'events' => $events,
-            'eventRows' => $eventRows,
-            'espaces' => $espaces,
-            'reservations' => $reservations,
-            'ticketTiers' => $ticketTiers,
-            'participants' => $participants,
-            'venues' => $venues,
-            'revenueTrend' => $revenueTrend,
-            'ticketMix' => $ticketMix,
-            'recentRegistrations' => $recentRegistrations,
-            'stats' => $stats,
-        ]);
+        // ─── Calendrier de disponibilité ───────────────────────
+$tousLesEspaces = Espace::orderBy('nom')->get();
+
+$evenementsParEspace = Evenement::with('espace')
+    ->whereIn('espace_id', $tousLesEspaces->pluck('id'))
+    ->get()
+    ->groupBy('espace_id');
+
+return view('organizer.dashboard', [
+    'user' => $user,
+    'events' => $events,
+    'eventRows' => $eventRows,
+    'espaces' => $espaces,
+    'reservations' => $reservations,
+    'ticketTiers' => $ticketTiers,
+    'participants' => $participants,
+    'venues' => $venues,
+    'revenueTrend' => $revenueTrend,
+    'ticketMix' => $ticketMix,
+    'recentRegistrations' => $recentRegistrations,
+    'stats' => $stats,
+    'tousLesEspaces' => $tousLesEspaces,          // ← NOUVEAU
+    'evenementsParEspace' => $evenementsParEspace, // ← NOUVEAU
+]);
     }
 
     private function eventStatus(Evenement $event): array

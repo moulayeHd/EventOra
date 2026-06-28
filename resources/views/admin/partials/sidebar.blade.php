@@ -3,6 +3,7 @@
         ['section' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'dashboard', 'title' => 'Dashboard', 'subtitle' => 'Vue globale de la plateforme.'],
         ['section' => 'users', 'label' => 'Users', 'icon' => 'users', 'title' => 'Users', 'subtitle' => $stats['users'].' total'],
         ['section' => 'events', 'label' => 'Events', 'icon' => 'calendar', 'title' => 'Events', 'subtitle' => $stats['events'].' total'],
+        ['section' => 'demandes', 'label' => 'Demandes', 'icon' => 'users', 'title' => 'Demandes organisateurs', 'subtitle' => $demandesEnAttente.' demande(s) en attente de validation'],
         ['section' => 'settings', 'label' => 'Settings', 'icon' => 'settings', 'title' => 'Settings', 'subtitle' => 'Configuration de demonstration'],
     ];
 @endphp

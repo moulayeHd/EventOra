@@ -11,7 +11,7 @@
     </section>
 
     <section class="contact-section section-pad">
-        <div class="contact-form" style="padding: 0;">
+        <div class="contact-form" style="padding: 5pxpx;">
 
             {{-- Header avec bouton tout lire --}}
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">

@@ -6,7 +6,7 @@
     @php
         $features = [
             [
-                'title' => 'Création d’événements',
+                'title' => "Création d'événements",
                 'text' => 'Lancez de superbes pages événementielles en quelques minutes avec des outils intuitifs.',
                 'icon' => 'icones/icone/creation d\'evenement.png',
                 'symbol' => '✦',
@@ -84,7 +84,7 @@
                 'role' => 'Responsable événements, Northstar',
             ],
             [
-                'quote' => 'Le parcours d’accueil nous a économisé quarante heures d’équipe. Les participants l’ont remarqué immédiatement.',
+                'quote' => "Le parcours d'accueil nous a économisé quarante heures d'équipe. Les participants l'ont remarqué immédiatement.",
                 'initials' => 'MV',
                 'name' => 'Marco Vela',
                 'role' => 'Producteur, Atlas Festivals',
@@ -100,11 +100,11 @@
 
     <section class="hero-section">
         <div class="hero-inner">
-            <p class="eyebrow pill"><span></span>Nouveau - Aperçus participants propulsés par l’IA</p>
+            <p class="eyebrow pill"><span></span>Nouveau - Aperçus participants propulsés par l'IA</p>
             <h1>Transformer les événements, <span>gérés sans effort.</span></h1>
             <p class="hero-copy">La plateforme de bout en bout pour les organisateurs qui soignent chaque détail. Créez, vendez et pilotez des événements qui paraissent inévitables.</p>
             <div class="hero-actions">
-                <a class="btn btn-primary" href="{{ route('events') }}">Commencer à organiser</a>
+                <a class="btn btn-primary" href="@auth @if(auth()->user()->isOrganisateur()) {{ route('organisateur') }} @elseif(auth()->user()->isEnAttente()) {{ route('attente.validation') }} @else {{ route('demande.organisateur.form') }} @endif @else {{ route('inscription') }} @endauth">Commencer à organiser</a>
                 <a class="btn btn-glass" href="{{ route('events') }}">Explorer les événements →</a>
             </div>
             <div class="stats-panel" aria-label="Statistiques EventOra">
@@ -187,7 +187,7 @@
         <div class="testimonial-grid">
             @foreach ($testimonials as $testimonial)
                 <article class="testimonial-card">
-                    <p>“{{ $testimonial['quote'] }}”</p>
+                    <p>"{{ $testimonial['quote'] }}"</p>
                     <div class="testimonial-author">
                         <span>{{ $testimonial['initials'] }}</span>
                         <div>
@@ -203,8 +203,8 @@
     <section class="cta-section section-pad" id="cta">
         <div class="cta-card">
             <h2>Votre prochain événement mérite <span>EventOra.</span></h2>
-            <p>Commencez gratuitement. Passez à l’offre supérieure quand vous êtes prêt. Aucune carte bancaire requise.</p>
-            <a class="btn btn-primary" href="{{ route('events') }}">Commencer à organiser votre événement</a>
+            <p>Commencez gratuitement. Passez à l'offre supérieure quand vous êtes prêt. Aucune carte bancaire requise.</p>
+            <a class="btn btn-primary" href="@auth @if(auth()->user()->isOrganisateur()) {{ route('organisateur') }} @elseif(auth()->user()->isEnAttente()) {{ route('attente.validation') }} @else {{ route('demande.organisateur.form') }} @endif @else {{ route('inscription') }} @endauth">Commencer à organiser votre événement</a>
         </div>
     </section>
 @endsection
