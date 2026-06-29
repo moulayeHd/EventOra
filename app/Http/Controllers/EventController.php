@@ -19,78 +19,82 @@ class EventController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nom'             => ['required', 'string', 'max:255'],
-            'description'     => ['required', 'string'],
-            'image'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
-            'date'            => ['required', 'date', 'after:today'],
-            'heure_debut'     => ['required', 'date_format:H:i'],
-            'heure_fin'       => ['required', 'date_format:H:i', 'after:heure_debut'],
-            'espace_id'       => ['required', 'exists:espaces,id'],
-            'ticket_type'     => ['required', 'string', 'max:100'],
-            'ticket_price'    => ['required', 'numeric', 'min:0'],
-            'ticket_quantity' => ['required', 'integer', 'min:1'],
-        ]);
+{
+    $validated = $request->validate([
+        'nom'             => ['required', 'string', 'max:255'],
+        'description'     => ['required', 'string'],
+        'image'           => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+        'date'            => ['required', 'date', 'after:today'],
+        'heure_debut'     => ['required', 'date_format:H:i'],
+        'heure_fin'       => ['required', 'date_format:H:i', 'after:heure_debut'],
+        'espace_id'       => ['required', 'exists:espaces,id'],
+        'billets'         => ['required', 'array', 'min:1'],
+        'billets.*.type'  => ['required', 'string', 'max:100'],
+        'billets.*.prix'  => ['required', 'numeric', 'min:0'],
+        'billets.*.quantite' => ['required', 'integer', 'min:1'],
+    ]);
 
-        // ─── Vérification conflit de lieu ──────────────────
-        $conflit = $this->detecterConflit(
-            $validated['espace_id'],
-            $validated['date'],
-            $validated['heure_debut'],
-            $validated['heure_fin']
-        );
+    // ─── Vérification conflit de lieu ──────────────────
+    $conflit = $this->detecterConflit(
+        $validated['espace_id'],
+        $validated['date'],
+        $validated['heure_debut'],
+        $validated['heure_fin']
+    );
 
-        if ($conflit) {
-            return back()
-                ->withErrors([
-                    'espace_id' => 'Ce lieu est déjà réservé le ' .
-                        \Carbon\Carbon::parse($validated['date'])->format('d/m/Y') .
-                        ' de ' . $conflit->heure_debut . ' à ' . $conflit->heure_fin .
-                        ' par l\'événement "' . $conflit->nom . '".' .
-                        ' Veuillez choisir un autre lieu ou modifier les horaires.'
-                ])
-                ->withInput();
-        }
+    if ($conflit) {
+        return back()
+            ->withErrors([
+                'espace_id' => 'Ce lieu est déjà réservé le ' .
+                    \Carbon\Carbon::parse($validated['date'])->format('d/m/Y') .
+                    ' de ' . $conflit->heure_debut . ' à ' . $conflit->heure_fin .
+                    ' par l\'événement "' . $conflit->nom . '".' .
+                    ' Veuillez choisir un autre lieu ou modifier les horaires.'
+            ])
+            ->withInput();
+    }
 
-        $eventData = collect($validated)
-            ->only(['nom', 'description', 'date', 'heure_debut', 'heure_fin', 'espace_id'])
-            ->all();
+    $eventData = collect($validated)
+        ->only(['nom', 'description', 'date', 'heure_debut', 'heure_fin', 'espace_id'])
+        ->all();
 
-        $eventData['user_id'] = auth()->id();
+    $eventData['user_id'] = auth()->id();
 
-        if ($request->hasFile('image')) {
-            $eventData['image_path'] = $request->file('image')->store('events', 'public');
-        }
+    if ($request->hasFile('image')) {
+        $eventData['image_path'] = $request->file('image')->store('events', 'public');
+    }
 
-        $event = DB::transaction(function () use ($eventData, $validated) {
-            $event = Evenement::create($eventData);
+    $event = DB::transaction(function () use ($eventData, $validated) {
+        $event = Evenement::create($eventData);
 
+        // Créer tous les types de billets
+        foreach ($validated['billets'] as $billet) {
             Billet::create([
                 'evenement_id' => $event->id,
-                'type'         => $validated['ticket_type'],
-                'prix'         => $validated['ticket_price'],
-                'quantite'     => $validated['ticket_quantity'],
+                'type'         => $billet['type'],
+                'prix'         => $billet['prix'],
+                'quantite'     => $billet['quantite'],
             ]);
-
-            return $event;
-        });
-
-        if ($request->input('source') === 'organizer') {
-            return redirect()
-                ->route('organisateur')
-                ->with('success', 'Evenement cree avec succes.');
         }
 
-        if ($request->input('source') === 'admin') {
-            return redirect(route('admin.dashboard') . '#events')
-                ->with('success', 'Evenement cree avec succes.');
-        }
+        return $event;
+    });
 
+    if ($request->input('source') === 'organizer') {
         return redirect()
-            ->route('event.details', $event)
+            ->route('organisateur')
             ->with('success', 'Evenement cree avec succes.');
     }
+
+    if ($request->input('source') === 'admin') {
+        return redirect(route('admin.dashboard') . '#events')
+            ->with('success', 'Evenement cree avec succes.');
+    }
+
+    return redirect()
+        ->route('event.details', $event)
+        ->with('success', 'Evenement cree avec succes.');
+}
 
     public function show(Evenement $event)
     {
