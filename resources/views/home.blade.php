@@ -9,37 +9,31 @@
                 'title' => "Création d'événements",
                 'text' => 'Lancez de superbes pages événementielles en quelques minutes avec des outils intuitifs.',
                 'icon' => 'icones/icone/creation d\'evenement.png',
-                'symbol' => '✦',
             ],
             [
                 'title' => 'Billetterie & inscription',
                 'text' => 'Vendez des billets, gérez les RSVP et suivez les paiements sans friction.',
                 'icon' => 'icones/icone/billetterie et inscription.jpg',
-                'symbol' => '◇',
             ],
             [
                 'title' => 'Gestion des participants',
                 'text' => 'Suivez les arrivées, segmentez vos audiences et personnalisez chaque interaction.',
                 'icon' => 'icones/icone/participation.png',
-                'symbol' => '◎',
             ],
             [
                 'title' => 'Reporting & analytics',
                 'text' => 'Des tableaux de bord en temps réel révèlent ce qui fonctionne et quoi optimiser ensuite.',
                 'icon' => 'icones/icone/analytique.png',
-                'symbol' => '△',
             ],
             [
                 'title' => 'Gestion des lieux',
                 'text' => 'Coordonnez les espaces, les plans et les capacités sur plusieurs sites.',
                 'icon' => 'icones/icone/gestion des lieux.png',
-                'symbol' => '□',
             ],
             [
                 'title' => 'Promotion intelligente',
                 'text' => 'Partagez vos événements, activez vos communautés et mesurez chaque canal.',
                 'icon' => 'icones/icone/promotion.png',
-                'symbol' => '×',
             ],
         ];
 
@@ -98,7 +92,7 @@
         ];
     @endphp
 
-    <section class="hero-section">
+    <section class="hero-section" style="background: linear-gradient(145deg, rgba(28, 10, 69, 0.25) 0%, rgba(7, 12, 50, 0.35) 48%, rgba(1, 6, 16, 0.45) 100%), url('{{ asset('images/image/IMAGE 4.png') }}') center center / cover no-repeat;">
         <div class="hero-inner">
             <p class="eyebrow pill"><span></span>Nouveau - Aperçus participants propulsés par l'IA</p>
             <h1>Transformer les événements, <span>gérés sans effort.</span></h1>
@@ -124,7 +118,7 @@
         </div>
     </section>
 
-    <section class="toolkit-section section-pad" id="features">
+    <section class="toolkit-section section-pad fade-in" id="features">
         <div class="section-heading centered">
             <p class="eyebrow">Boîte à outils événementielle</p>
             <h2>Tout ce dont vous avez besoin.<span> Rien de superflu.</span></h2>
@@ -135,7 +129,6 @@
                 <article class="feature-card">
                     <div class="feature-icon">
                         <img src="{{ asset($feature['icon']) }}" alt="">
-                        <span>{{ $feature['symbol'] }}</span>
                     </div>
                     <h3>{{ $feature['title'] }}</h3>
                     <p>{{ $feature['text'] }}</p>
@@ -144,7 +137,7 @@
         </div>
     </section>
 
-    <section class="events-section section-pad">
+    <section class="events-section section-pad fade-in">
         <div class="section-heading split">
             <div>
                 <p class="eyebrow">À venir</p>
@@ -178,29 +171,47 @@
         </div>
     </section>
 
-    <section class="testimonials-section section-pad" id="testimonials">
+    <section class="testimonials-section section-pad fade-in" id="testimonials">
         <div class="section-heading centered">
             <p class="eyebrow">Aimé par les équipes</p>
             <h2>Adopté par des organisateurs de classe mondiale</h2>
         </div>
 
-        <div class="testimonial-grid">
-            @foreach ($testimonials as $testimonial)
-                <article class="testimonial-card">
-                    <p>"{{ $testimonial['quote'] }}"</p>
-                    <div class="testimonial-author">
-                        <span>{{ $testimonial['initials'] }}</span>
-                        <div>
-                            <strong>{{ $testimonial['name'] }}</strong>
-                            <small>{{ $testimonial['role'] }}</small>
-                        </div>
-                    </div>
-                </article>
-            @endforeach
+        <div class="testimonial-carousel" data-carousel>
+            <button type="button" class="carousel-arrow carousel-arrow--prev" data-prev aria-label="Témoignage précédent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+
+            <div class="testimonial-track-wrap">
+                <div class="testimonial-track" data-track>
+                    @foreach ($testimonials as $testimonial)
+                        <article class="testimonial-card">
+                            <p>"{{ $testimonial['quote'] }}"</p>
+                            <div class="testimonial-author">
+                                <span>{{ $testimonial['initials'] }}</span>
+                                <div>
+                                    <strong>{{ $testimonial['name'] }}</strong>
+                                    <small>{{ $testimonial['role'] }}</small>
+                                </div>
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
+            </div>
+
+            <button type="button" class="carousel-arrow carousel-arrow--next" data-next aria-label="Témoignage suivant">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+
+            <div class="testimonial-dots" data-dots>
+                @foreach ($testimonials as $index => $testimonial)
+                    <button type="button" class="testimonial-dot {{ $index === 0 ? 'is-active' : '' }}" data-dot-index="{{ $index }}" aria-label="Témoignage {{ $index + 1 }}"></button>
+                @endforeach
+            </div>
         </div>
     </section>
 
-    <section class="cta-section section-pad" id="cta">
+    <section class="cta-section section-pad fade-in" id="cta">
         <div class="cta-card">
             <h2>Votre prochain événement mérite <span>EventOra.</span></h2>
             <p>Commencez gratuitement. Passez à l'offre supérieure quand vous êtes prêt. Aucune carte bancaire requise.</p>
