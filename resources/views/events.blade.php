@@ -12,7 +12,13 @@
         ];
     @endphp
 
-    <section class="page-hero compact-hero">
+    <section class="page-hero compact-hero hero-slider">
+        <div class="hero-slides">
+                     <div class="hero-slide" style="background-image: url('{{ asset('images/image/IMAGE 1.png') }}');"></div>
+                     <div class="hero-slide" style="background-image: url('{{ asset('images/image/IMAGE 2.png') }}');"></div>
+                     <div class="hero-slide" style="background-image: url('{{ asset('images/image/IMAGE 3.WEBP') }}');"></div>
+                     <div class="hero-slide" style="background-image: url('{{ asset('images/image/IMAGE 5.png') }}');"></div>
+        </div>
         <div class="hero-inner narrow">
             <p class="eyebrow pill"><span></span>Agenda public</p>
             <h1>Decouvrez les evenements EventOra</h1>
