@@ -190,7 +190,7 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 
-    <script>
+   <script>
     const loader = document.getElementById('loader');
     const dejàVisité = sessionStorage.getItem('dejàVisité');
 
@@ -204,6 +204,15 @@
             }, 500);
         }, delai);
     });
+
+    // Loader UNIQUEMENT sur le formulaire de connexion
+   const loginForm = document.querySelector('form.auth-form');
+if (loginForm) {
+    loginForm.addEventListener('submit', function () {
+        loader.style.display = 'flex';
+        loader.classList.remove('hidden');
+    });
+}
 </script>
 
     <script>
