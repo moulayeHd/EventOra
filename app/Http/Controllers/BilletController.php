@@ -22,14 +22,25 @@ class BilletController extends Controller
         return response()->json($billets);
     }
 
-    public function verify(string $code)
-    {
-        $reservation = Reservation::with(['user', 'billet.evenement.espace'])
-            ->where('ticket_code', $code)
-            ->firstOrFail();
+   public function verify(string $code)
+{
+    $reservation = Reservation::with(['user', 'billet.evenement.espace'])
+        ->where('ticket_code', $code)
+        ->firstOrFail();
 
-        return view('billets.verify', compact('reservation'));
+    // Si déjà utilisé, on affiche quand même mais avec le statut
+    $dejaUtilise = $reservation->utilise;
+
+    // Marquer comme utilisé si c'est la première fois
+    if (!$dejaUtilise) {
+        $reservation->update([
+            'utilise'    => true,
+            'utilise_le' => now(),
+        ]);
     }
+
+    return view('billets.verify', compact('reservation', 'dejaUtilise'));
+}
 
     private function attachQrData(Reservation $reservation): Reservation
     {

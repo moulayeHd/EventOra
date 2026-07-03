@@ -1390,7 +1390,7 @@
 
 .organizer-mobile-overlay {
     position: fixed;
-    inset: 0;
+    inset:  0 0 0 var(--org-sidebar);
     z-index: 55;
     display: none;
     background: rgba(3, 7, 18, .62);

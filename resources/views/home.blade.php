@@ -94,7 +94,7 @@
 
     <section class="hero-section" style="background: linear-gradient(145deg, rgba(28, 10, 69, 0.25) 0%, rgba(7, 12, 50, 0.35) 48%, rgba(1, 6, 16, 0.45) 100%), url('{{ asset('images/image/IMAGE 4.png') }}') center center / cover no-repeat;">
         <div class="hero-inner">
-            <p class="eyebrow pill"><span></span>Nouveau - Aperçus participants propulsés par l'IA</p>
+            <p class="eyebrow pill"><span></span>Accueil</p>
             <h1>Transformer les événements, <span>gérés sans effort.</span></h1>
             <p class="hero-copy">La plateforme de bout en bout pour les organisateurs qui soignent chaque détail. Créez, vendez et pilotez des événements qui paraissent inévitables.</p>
             <div class="hero-actions">

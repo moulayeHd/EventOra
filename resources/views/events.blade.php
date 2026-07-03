@@ -22,15 +22,14 @@
 
     <section class="listing-section section-pad">
         <div class="filter-row" aria-label="Categories d'evenements">
-            <button class="filter-pill is-active" type="button">Tous</button>
-            <button class="filter-pill" type="button">A venir</button>
-            <button class="filter-pill" type="button">Avec billets</button>
-            <button class="filter-pill" type="button">Organises</button>
+            <button class="filter-pill is-active" type="button" data-filter="tous">Tous</button>
+            <button class="filter-pill" type="button" data-filter="avenir">À venir</button>
+            <button class="filter-pill" type="button" data-filter="passes">Passés</button>
         </div>
 
         <div class="listing-grid">
             @forelse ($events as $event)
-                <article class="listing-card">
+                <article class="listing-card" data-date="{{ $event->date }}">
                     <a class="listing-image" href="{{ route('event.details', $event) }}">
                         <span class="event-tag">{{ $event->espace?->nom ?? 'Evenement' }}</span>
                         <img src="{{ $event->imageUrl($eventImages[$loop->index % count($eventImages)]) }}" alt="{{ $event->nom }}">
@@ -53,6 +52,7 @@
                 </article>
             @endforelse
         </div>
+
         {{-- Pagination --}}
         <div style="margin-top: 2rem; display: flex; justify-content: center;">
             {{ $events->links() }}

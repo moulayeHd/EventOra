@@ -26,11 +26,14 @@
             pointer-events: none;
         }
 
-        #loader img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-        }
+       #loader img {
+          width: 80px;
+          height: 80px;
+          object-fit: contain;
+          background: #fff;
+          border-radius: 16px;
+          padding: 8px;
+      }
 
         #loader h1 {
             font-size: 2rem;
@@ -125,10 +128,10 @@
         </header>
 
         <main>
-            @if (session('success'))
-                <div class="site-flash site-flash--success" role="status">
-                    {{ session('success') }}
-                </div>
+           @if (session('success'))
+                   <div class="site-flash site-flash--success" role="status" style="margin-top: 90px;">
+                         {{ session('success') }}
+                   </div>
             @endif
 
             @if ($errors->any())
@@ -188,26 +191,20 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script>
-        const loader = document.getElementById('loader');
+    const loader = document.getElementById('loader');
+    const dejàVisité = sessionStorage.getItem('dejàVisité');
 
-        const dejàVisité = sessionStorage.getItem('dejàVisité');
-
-        window.addEventListener('load', function () {
-            const delai = dejàVisité ? 0 : 2000;
-            sessionStorage.setItem('dejàVisité', 'oui');
+    window.addEventListener('load', function () {
+        const delai = dejàVisité ? 0 : 2000;
+        sessionStorage.setItem('dejàVisité', 'oui');
+        setTimeout(() => {
+            loader.classList.add('hidden');
             setTimeout(() => {
-                loader.classList.add('hidden');
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-            }, delai);
-        });
-
-        document.addEventListener('submit', function () {
-            loader.style.display = 'flex';
-            loader.classList.remove('hidden');
-        });
-    </script>
+                loader.style.display = 'none';
+            }, 500);
+        }, delai);
+    });
+</script>
 
     <script>
         (function () {
@@ -322,6 +319,37 @@
 
         const statsPanel = document.querySelector('.stats-panel');
         if (statsPanel) observer.observe(statsPanel);
+    })();
+</script>
+
+<script>
+    (function () {
+        const pills = document.querySelectorAll('.filter-pill');
+        if (!pills.length) return;
+
+        const today = new Date().toISOString().split('T')[0];
+
+        pills.forEach(pill => {
+            pill.addEventListener('click', function () {
+                // Activer le bouton cliqué
+                pills.forEach(p => p.classList.remove('is-active'));
+                this.classList.add('is-active');
+
+                const filter = this.dataset.filter;
+                const cards = document.querySelectorAll('.listing-card');
+
+                cards.forEach(card => {
+                    const date = card.dataset.date;
+                    if (filter === 'tous') {
+                        card.style.display = '';
+                    } else if (filter === 'avenir') {
+                        card.style.display = date >= today ? '' : 'none';
+                    } else if (filter === 'passes') {
+                        card.style.display = date < today ? '' : 'none';
+                    }
+                });
+            });
+        });
     })();
 </script>
 </body>

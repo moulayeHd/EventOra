@@ -9,10 +9,15 @@
                 <p class="eyebrow">Espace utilisateur</p>
                 <h1>Mes reservations</h1>
             </div>
-            <a class="btn btn-primary" href="{{ route('events') }}">Reserver un evenement</a>
+            <div style="display:flex; gap:12px;">
+                <a class="btn btn-glass" href="{{ route('billets.index') }}">Mes billets</a>
+                <a class="btn btn-primary" href="{{ route('events') }}">Reserver un evenement</a>
+            </div>
         </div>
 
-        <div class="dashboard-panel">
+       
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
             <div class="data-table">
                 <div class="table-row table-head">
                     <span>Evenement</span>

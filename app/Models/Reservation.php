@@ -15,6 +15,9 @@ class Reservation extends Model
         'billet_id',
         'quantite',
         'ticket_code',
+        'utilise',
+        'utilise_le',
+
     ];
 
     public function user()
