@@ -26,22 +26,20 @@
                 <textarea name="description" rows="4" placeholder="Presentez l'experience, le public et le programme." required>{{ old('description') }}</textarea>
             </label>
 
-            {{-- Image custom --}}
-            <label>
-                Image de l'evenement
-                <div
-                    onclick="document.getElementById('image-input').click()"
-                    style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-secondary); cursor:pointer;">
-                    <span style="padding:7px 14px; background:#1D9E75; border:none; border-radius:6px; font-size:12px; color:white; text-transform:none; font-weight:600; letter-spacing:0; white-space:nowrap; box-shadow:0 2px 8px rgba(29,158,117,0.3);">
-                        📎 Choisir un fichier
-                    </span>
-                    <span style="font-size:13px; color:var(--color-text-secondary); text-transform:none; font-weight:400; letter-spacing:0;">:</span>
-                    <span id="file-name" style="font-size:12px; color:var(--color-text-secondary); text-transform:none; font-weight:400; letter-spacing:0;">
-                        Aucun fichier choisi
-                    </span>
-                    <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" style="display:none;" onchange="document.getElementById('file-name').textContent = this.files[0]?.name || 'Aucun fichier choisi'">
-                </div>
-            </label>
+           {{-- Image custom --}}
+<label>
+    Image de l'evenement
+    <label for="image-input" style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-secondary); cursor:pointer;">
+        <span style="padding:7px 14px; background:#1D9E75; border:none; border-radius:6px; font-size:12px; color:white; font-weight:600; white-space:nowrap; box-shadow:0 2px 8px rgba(29,158,117,0.3);">
+             Choisir un fichier
+        </span>
+        <span style="font-size:13px; color:var(--color-text-secondary);">:</span>
+        <span id="file-name" style="font-size:12px; color:var(--color-text-secondary);">
+            Aucun fichier choisi
+        </span>
+        <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" style="display:none;">
+    </label>
+</label>
 
             <div class="organizer-form__grid">
                 <label>
@@ -187,5 +185,9 @@ function supprimerBillet(btn) {
     document.querySelectorAll('.billet-row').forEach((row, index) => {
         row.querySelector('strong').textContent = 'Billet ' + (index + 1);
     });
+    
 }
+document.getElementById('image-input').addEventListener('change', function () {
+    document.getElementById('file-name').textContent = this.files[0]?.name || 'Aucun fichier choisi';
+});
 </script>
