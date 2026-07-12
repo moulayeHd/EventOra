@@ -69,8 +69,8 @@
     <div class="site-shell">
         <header class="site-header">
             <a class="brand" href="{{ route('home') }}" aria-label="EventOra - accueil">
-                <span class="brand-mark">
-                    <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true">
+                <span class="brand-mark" style="background:white; border-radius:8px; padding:4px; display:flex; align-items:center; justify-content:center;">
+                    <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true" style="width:28px; height:28px; object-fit:contain;">
                 </span>
                 <span>EventOra</span>
             </a>
@@ -147,8 +147,8 @@
             <div class="footer-main">
                 <div class="footer-brand">
                     <a class="brand" href="{{ route('home') }}" aria-label="EventOra - accueil">
-                        <span class="brand-mark">
-                            <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true">
+                        <span class="brand-mark" style="background:white; border-radius:8px; padding:4px; display:flex; align-items:center; justify-content:center;">
+                              <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true" style="width:28px; height:28px; object-fit:contain;">
                         </span>
                         <span>EventOra</span>
                     </a>

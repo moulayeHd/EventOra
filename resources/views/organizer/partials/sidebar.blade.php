@@ -14,8 +14,8 @@
 <aside class="organizer-sidebar" aria-label="Navigation organisateur">
     <div class="organizer-sidebar__brand">
         <a class="organizer-brand" href="{{ route('organisateur') }}" aria-label="EventOra organisateur">
-            <span class="organizer-brand__mark">
-                <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true">
+            <span class="organizer-brand__mark" style="background:white; border-radius:8px; padding:4px; display:flex; align-items:center; justify-content:center;">
+                       <img src="{{ asset('logo/logo/logo.png') }}" alt="" aria-hidden="true" style="width:28px; height:28px; object-fit:contain;">
             </span>
             <span>EventOra</span>
         </a>
@@ -44,14 +44,7 @@
             @endforeach
         </nav>
 
-        <div class="organizer-upgrade">
-            <div class="organizer-upgrade__icon">
-                <x-organizer.icon name="sparkles" />
-            </div>
-            <strong>Upgrade to Pro</strong>
-            <p>Debloquez l'IA, les exports avances et les analyses premium.</p>
-            <button type="button">Upgrade</button>
-        </div>
+      
 
         <div class="organizer-sidebar__footer">
             <a href="{{ route('home') }}">

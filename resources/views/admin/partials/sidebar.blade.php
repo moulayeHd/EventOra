@@ -11,10 +11,10 @@
 <aside class="admin-sidebar" aria-label="Navigation administrateur">
     <div class="admin-sidebar__brand">
         <a class="admin-brand" href="{{ route('admin.dashboard') }}" aria-label="EventOra admin">
-            <span class="admin-brand__mark">
-                <x-admin.icon name="shield" />
-            </span>
-            <span>EventOra Admin</span>
+            <span class="admin-brand__mark" style="background:white; border-radius:8px; padding:4px; display:flex; align-items:center; justify-content:center;">
+    <img src="{{ asset('logo/logo/logo.png') }}" alt="EventOra" style="width:28px; height:28px; object-fit:contain;">
+</span>
+<span>EventOra Admin</span>
         </a>
 
         <button class="admin-icon-button admin-sidebar__close" type="button" data-admin-sidebar-close aria-label="Fermer le menu">

@@ -114,32 +114,46 @@
                                 </form>
 
                                 {{-- Formulaire Refuser --}}
-                                <div>
-                                    <button
-                                        type="button"
-                                        style="width:100%; padding:6px 12px; background:#EF4444; color:white; border:none; border-radius:6px; font-size:12px; cursor:pointer;"
-                                        onclick="document.getElementById('refus-{{ $demande->id }}').style.display = document.getElementById('refus-{{ $demande->id }}').style.display === 'none' ? 'block' : 'none'">
-                                        ❌ Refuser
-                                    </button>
+<div>
+    <button
+        type="button"
+        style="width:100%; padding:6px 12px; background:#EF4444; color:white; border:none; border-radius:6px; font-size:12px; cursor:pointer;"
+        onclick="
+            var el = document.getElementById('refus-{{ $demande->id }}');
+            el.hidden = !el.hidden;
+        ">
+        ❌ Refuser
+    </button>
 
-                                    <div id="refus-{{ $demande->id }}" style="display:none; margin-top:8px;">
-                                        <form action="{{ route('admin.demandes.refuser', $demande) }}" method="POST">
-                                            @csrf
-                                            <textarea
-                                                name="message_refus"
-                                                rows="3"
-                                                placeholder="Raison du refus (obligatoire)..."
-                                                required
-                                                style="width:100%; padding:8px; border-radius:6px; border:1px solid var(--color-border-secondary); background:var(--color-background-secondary); color:var(--color-text-primary); font-size:12px; resize:vertical; box-sizing:border-box;">
-                                            </textarea>
-                                            <button
-                                                type="submit"
-                                                style="width:100%; margin-top:4px; padding:6px 12px; background:#EF4444; color:white; border:none; border-radius:6px; font-size:12px; cursor:pointer;">
-                                                Confirmer le refus
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
+    <div id="refus-{{ $demande->id }}" hidden style="margin-top:8px; background:var(--color-background-secondary); border:1px solid var(--color-border-secondary); border-radius:8px; padding:12px;">
+        <p style="font-size:12px; color:var(--color-text-secondary); margin:0 0 8px; font-weight:500;">
+             Raison du refus :
+        </p>
+        <form action="{{ route('admin.demandes.refuser', $demande) }}" method="POST">
+            @csrf
+            <textarea
+    name="message_refus"
+    rows="3"
+    placeholder="Ex: Dossier incomplet, informations insuffisantes..."
+    required
+    style="width:100%; padding:8px 12px; border-radius:6px; border:1px solid #ffffff50; background:var(--color-background-primary); color:var(--color-text-primary); font-size:12px; resize:vertical; box-sizing:border-box; font-family:inherit; outline:none;">
+</textarea>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <button
+                    type="button"
+                    onclick="document.getElementById('refus-{{ $demande->id }}').hidden = true"
+                    style="flex:1; padding:6px 12px; background:transparent; border:1px solid var(--color-border-secondary); border-radius:6px; font-size:12px; color:var(--color-text-secondary); cursor:pointer;">
+                    Annuler
+                </button>
+                <button
+                    type="submit"
+                    style="flex:1; padding:6px 12px; background:#EF4444; color:white; border:none; border-radius:6px; font-size:12px; cursor:pointer;">
+                    Confirmer
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 
                             @elseif ($demande->statut === 'approuve')
                                 <span style="font-size:12px; color:var(--color-text-secondary);">

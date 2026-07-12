@@ -26,19 +26,18 @@
                 <textarea name="description" rows="4" placeholder="Presentez l'experience, le public et le programme." required>{{ old('description') }}</textarea>
             </label>
 
-           {{-- Image custom --}}
+           {{-- Image optionnelle --}}
 <label>
-    Image de l'evenement
+    Image de l'evenement (optionnelle)
     <label for="image-input" style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid var(--color-border-secondary); border-radius:8px; background:var(--color-background-secondary); cursor:pointer;">
-        <span style="padding:7px 14px; background:#1D9E75; border:none; border-radius:6px; font-size:12px; color:white; font-weight:600; white-space:nowrap; box-shadow:0 2px 8px rgba(29,158,117,0.3);">
+        <span style="padding:7px 14px; background:#1D9E75; border-radius:6px; font-size:12px; color:white; font-weight:600; white-space:nowrap;">
              Choisir un fichier
         </span>
-        <span style="font-size:13px; color:var(--color-text-secondary);">:</span>
         <span id="file-name" style="font-size:12px; color:var(--color-text-secondary);">
             Aucun fichier choisi
         </span>
-        <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" style="display:none;">
     </label>
+    <input type="file" id="image-input" name="image" accept="image/png,image/jpeg,image/webp" style="position:absolute; width:1px; height:1px; opacity:0; overflow:hidden;">
 </label>
 
             <div class="organizer-form__grid">

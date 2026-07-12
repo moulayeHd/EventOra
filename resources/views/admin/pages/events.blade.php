@@ -33,7 +33,7 @@
                     <span>{{ $event['location'] }}</span>
                     <div class="admin-row-actions">
                         <a class="admin-icon-button" href="{{ route('event.details', $event['model']) }}" aria-label="Voir {{ $event['name'] }}">
-                            <x-admin.icon name="edit" />
+                           <x-organizer.icon name="eye" />
                         </a>
                         <form action="{{ route('events.destroy', $event['model']) }}" method="POST">
                             @csrf
