@@ -41,14 +41,14 @@
             {{-- Type d'événements --}}
             <label>
                 Type d'événements que vous organisez
-                <select name="type_evenements" required>
-                    <option value="">-- Choisissez un type --</option>
-                    <option value="concert"     @selected(old('type_evenements', $demande?->type_evenements) === 'concert')>🎵 Concert</option>
-                    <option value="gala"        @selected(old('type_evenements', $demande?->type_evenements) === 'gala')>🎭 Gala</option>
-                    <option value="sport"       @selected(old('type_evenements', $demande?->type_evenements) === 'sport')>⚽ Sport</option>
-                    <option value="culturel"    @selected(old('type_evenements', $demande?->type_evenements) === 'culturel')>🎨 Culturel</option>
-                    <option value="conference"  @selected(old('type_evenements', $demande?->type_evenements) === 'conference')>🎤 Conférence</option>
-                    <option value="autre"       @selected(old('type_evenements', $demande?->type_evenements) === 'autre')>✨ Autre</option>
+                <select name="type_evenements" required style="padding:10px 14px; border-radius:8px; border:1px solid var(--color-border-secondary); background:var(--color-background-secondary); color:var(--color-text-primary); font-size:14px; width:100%;">
+                    <option value=""  style="background:#ffff; color:#0f0a1f;">-- Choisissez un type --</option>
+                    <option value="concert"  style="background:#fff; color:#0f0a1f;"     @selected(old('type_evenements', $demande?->type_evenements) === 'concert')>🎵 Concert</option>
+                    <option value="gala"  style="background:#fff; color:#0f0a1f;"        @selected(old('type_evenements', $demande?->type_evenements) === 'gala')>🎭 Gala</option>
+                    <option value="sport"  style="background:#fff; color:#0f0a1f;"       @selected(old('type_evenements', $demande?->type_evenements) === 'sport')>⚽ Sport</option>
+                    <option value="culturel"  style="background:#fff; color:#0f0a1f;"    @selected(old('type_evenements', $demande?->type_evenements) === 'culturel')>🎨 Culturel</option>
+                    <option value="conference"  style="background:#fff; color:#0f0a1f;"  @selected(old('type_evenements', $demande?->type_evenements) === 'conference')>🎤 Conférence</option>
+                    <option value="autre"  style="background:#fff; color:#0f0a1f;"       @selected(old('type_evenements', $demande?->type_evenements) === 'autre')>✨ Autre</option>
                 </select>
             </label>
 
